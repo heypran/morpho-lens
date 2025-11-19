@@ -119,7 +119,7 @@ const AllocationList: React.FC<AllocationListProps> = ({ allocations, assetSymbo
         <HelpCircle className="w-4 h-4 shrink-0 mt-0.5" />
         <p>
           <strong className="text-slate-400">Data Sources:</strong> Vault TVL and Share Price are verified directly on-chain. 
-          <strong className="text-slate-400 ml-1">Current Market LTV</strong> and <strong className="text-slate-400">Health Factors</strong> are derived using <a href="https://docs.morpho.org/build/borrow/tutorials/get-data" target="_blank" rel="noreferrer" className="text-morpho-400 hover:underline flex inline-flex items-center gap-1">Morpho Blue API <ExternalLink className="w-3 h-3"/></a> to fetch total market collateral and oracle prices.
+          <strong className="text-slate-400 ml-1">Current Market LTV</strong> and <strong className="text-slate-400">Health Factors</strong> are derived using APIs.
         </p>
       </div>
     </div>

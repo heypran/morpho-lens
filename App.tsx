@@ -86,7 +86,7 @@ function App() {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-xs font-mono px-2 py-1 rounded bg-slate-800 text-slate-400">Mainnet</span>
-            <a href="https://github.com/morpho-org" target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-white transition">Docs</a>
+            <a href="https://x.com/heypran" target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-white transition"> build by <span className="text-morpho-400">heypran</span></a>
           </div>
         </div>
       </nav>
@@ -199,13 +199,13 @@ function App() {
             {/* Deep Dive Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column: AI Analysis */}
-              <div className="lg:col-span-2">
+              {/* <div className="lg:col-span-2">
                  <h3 className="text-xl font-bold text-white mb-4">AI Risk Assessment</h3>
                  <AIAnalysis analysis={analysis} loading={status === FetchStatus.LOADING} />
-              </div>
+              </div> */}
 
               {/* Right Column: Contract Details */}
-              <div className="space-y-6">
+              <div className="lg:col-span-2 space-y-6">
                 <h3 className="text-xl font-bold text-white mb-4">Verifiable Parameters</h3>
                 
                 <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
