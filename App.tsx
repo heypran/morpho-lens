@@ -86,7 +86,7 @@ function App() {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-xs font-mono px-2 py-1 rounded bg-slate-800 text-slate-400">Mainnet</span>
-            <a href="https://x.com/heypran" target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-white transition"> build by <span className="text-morpho-400">heypran</span></a>
+            <a href="https://x.com/heypran" target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-white transition"> built by <span className="text-morpho-400">heypran</span></a>
           </div>
         </div>
       </nav>
