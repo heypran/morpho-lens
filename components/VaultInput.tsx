@@ -56,6 +56,7 @@ const VaultInput: React.FC<VaultInputProps> = ({ onAnalyze, status }) => {
        <span>Try:</span>
         <button onClick={() => setInput('0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB')} className="hover:text-morpho-400 underline decoration-dotted">Steakhouse USDC</button>
         <button onClick={() => setInput('0x4881Ef0BF6d2365D3dd6499ccd7532bcdBCE0658')} className="hover:text-morpho-400 underline decoration-dotted">Gauntlet WETH Core</button>
+        <button onClick={() => setInput('0xBEeFFF209270748ddd194831b3fa287a5386f5bC')} className="hover:text-morpho-400 underline decoration-dotted">Smokehouse USDC</button>
       </div>
     </div>
   );

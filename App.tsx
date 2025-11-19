@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
-import { Layers, ShieldCheck, Wallet, DollarSign, Activity, Lock, Percent, BarChart3, HeartPulse, TrendingUp } from 'lucide-react';
+import { Layers,  InfoIcon, Wallet, DollarSign, Activity, Lock, Percent, BarChart3, HeartPulse, TrendingUp } from 'lucide-react';
 import VaultInput from './components/VaultInput';
 import MetricsCard from './components/MetricsCard';
-import AIAnalysis from './components/AIAnalysis';
+// import AIAnalysis from './components/AIAnalysis';
 import AllocationList from './components/AllocationList';
 import { fetchVaultOnChain } from './services/chainService';
 import { analyzeVaultRisk } from './services/geminiService';
@@ -109,8 +109,9 @@ function App() {
         {/* Error Message */}
         {error && (
           <div className="max-w-3xl mx-auto mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-400">
-            <ShieldCheck className="w-6 h-6" />
-            <span>{error}</span>
+            <InfoIcon className="w-6 h-6" />
+            <span>{`${error} Sometimes RPC is slow, you may try again.`}</span>
+            
           </div>
         )}
 
@@ -163,26 +164,41 @@ function App() {
                 icon={BarChart3}
                 color="orange"
               />
-               <MetricsCard 
-                title="Weighted Max LTV" 
+               <MetricsCard
+                title="Weighted Max LTV"
                 value={`${(data.weightedLLTV * 100).toFixed(2)}%`}
                 subValue="Portfolio Limit (LLTV)"
                 icon={Percent}
                 color="purple"
+                infoContent={{
+                  description: "Maximum Loan-to-Value ratio across all markets, weighted by allocation size. This represents the theoretical maximum leverage the vault can achieve.",
+                  calculation: "Σ (Market Allocation × Market LLTV) / Total Allocation",
+                  example: "If 50% in Market A (90% LLTV) and 50% in Market B (80% LLTV), then Weighted Max LTV = (0.5 × 0.9) + (0.5 × 0.8) = 85%"
+                }}
               />
-              <MetricsCard 
-                title="Weighted Current LTV" 
+              <MetricsCard
+                title="Weighted Current LTV"
                 value={data.weightedLTV ? `${(data.weightedLTV * 100).toFixed(2)}%` : '0.00%'}
                 subValue="Portfolio Debt/Collateral"
                 icon={TrendingUp}
                 color="blue"
+                infoContent={{
+                  description: "Current Loan-to-Value ratio across all markets, weighted by allocation. This shows how much of the vault's borrowing capacity is actually being used.",
+                  calculation: "Σ (Market Allocation × Market Current LTV) / Total Allocation",
+                  example: "If 50% in Market A (45% current LTV) and 50% in Market B (30% current LTV), then Weighted Current LTV = (0.5 × 0.45) + (0.5 × 0.30) = 37.5%"
+                }}
               />
-              <MetricsCard 
-                title="Portfolio Health Factor" 
+              <MetricsCard
+                title="Portfolio Health Factor"
                 value={data.weightedHealthFactor && data.weightedHealthFactor < 99 ? data.weightedHealthFactor.toFixed(2) : '> 100'}
                 subValue="Max LTV / Current LTV"
                 icon={HeartPulse}
                 color={data.weightedHealthFactor && data.weightedHealthFactor < 1.1 ? "orange" : "green"}
+                infoContent={{
+                  description: "Ratio of maximum borrowing capacity to current borrowing. A higher value indicates safer position with more room before liquidation.",
+                  calculation: "Weighted Max LTV / Weighted Current LTV",
+                  example: "If Max LTV is 85% and Current LTV is 40%, then Health Factor = 0.85 / 0.40 = 2.125. Values below 1.0 indicate potential liquidation risk."
+                }}
               />
             </div>
 
