@@ -8,15 +8,16 @@ import AllocationList from './components/AllocationList';
 import { fetchVaultOnChain } from './services/chainService';
 import { analyzeVaultRisk } from './services/geminiService';
 import { enrichVaultDataWithGraph } from './services/graphService';
-import { VaultData, AnalysisResult, FetchStatus } from './types';
+import { VaultData, AnalysisResult, FetchStatus, ChainId } from './types';
 
 function App() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
   const [data, setData] = useState<VaultData | null>(null);
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedChain, setSelectedChain] = useState<ChainId>(ChainId.MAINNET);
 
-  const handleAnalyze = async (address: string) => {
+  const handleAnalyze = async (address: string, chainId: ChainId) => {
     setStatus(FetchStatus.LOADING);
     setError(null);
     setAnalysis(null);
@@ -24,11 +25,11 @@ function App() {
 
     try {
       // 1. Fetch On-Chain Data
-      let vaultData = await fetchVaultOnChain(address);
+      let vaultData = await fetchVaultOnChain(address, chainId);
 
       // 2. Enrich with Off-Chain Graph Data (Market LTV, Health Factor)
       try {
-         const enrichedAllocations = await enrichVaultDataWithGraph(vaultData.allocations);
+         const enrichedAllocations = await enrichVaultDataWithGraph(vaultData.allocations, chainId);
          
          // Calculate Weighted Metrics based on enriched data
          let weightedCurrentLTV = 0;
@@ -85,7 +86,9 @@ function App() {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-xs font-mono px-2 py-1 rounded bg-slate-800 text-slate-400">Mainnet</span>
+            <span className="text-xs font-mono px-2 py-1 rounded bg-slate-800 text-slate-400">
+              {ChainId[selectedChain]}
+            </span>
             <a href="https://x.com/heypran" target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-white transition"> built by <span className="text-morpho-400">heypran</span></a>
           </div>
         </div>
@@ -104,7 +107,12 @@ function App() {
         </div>
 
         {/* Input Section */}
-        <VaultInput onAnalyze={handleAnalyze} status={status} />
+        <VaultInput 
+          onAnalyze={handleAnalyze} 
+          status={status} 
+          selectedChain={selectedChain}
+          onChainChange={setSelectedChain}
+        />
 
         {/* Error Message */}
         {error && (

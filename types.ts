@@ -67,3 +67,10 @@ export enum FetchStatus {
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR',
 }
+
+export enum ChainId {
+  MAINNET = 1,
+  OPTIMISM = 10,
+  BASE = 8453,
+  ARBITRUM = 42161,
+}

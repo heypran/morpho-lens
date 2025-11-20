@@ -6,17 +6,40 @@ import {
   getContract,
   Address,
 } from "viem";
-import { mainnet } from "viem/chains";
-import { VaultData, MarketAllocation } from "../types";
+import { mainnet, base, arbitrum, optimism } from "viem/chains";
+import { VaultData, MarketAllocation, ChainId } from "../types";
 
-// Initialize Viem Public Client
-const client = createPublicClient({
-  chain: mainnet,
-  transport: http(process.env.RPC_URL ?? "https://eth.llamarpc.com"),
-  batch: {
-    multicall: true,
+// --- Chain Configuration ---
+const CHAIN_CONFIG = {
+  [ChainId.MAINNET]: {
+    chain: mainnet,
+    rpc: process.env.RPC_URL_MAINNET || process.env.RPC_URL || "https://eth.llamarpc.com",
   },
-});
+  [ChainId.BASE]: {
+    chain: base,
+    rpc: process.env.RPC_URL_BASE || "https://mainnet.base.org",
+  },
+  [ChainId.ARBITRUM]: {
+    chain: arbitrum,
+    rpc: process.env.RPC_URL_ARBITRUM || "https://arb1.arbitrum.io/rpc",
+  },
+  [ChainId.OPTIMISM]: {
+    chain: optimism,
+    rpc: process.env.RPC_URL_OPTIMISM || "https://mainnet.optimism.io",
+  },
+};
+
+const getClient = (chainId: ChainId) => {
+  const config = CHAIN_CONFIG[chainId];
+  if (!config) throw new Error(`Unsupported chain ID: ${chainId}`);
+  return createPublicClient({
+    chain: config.chain,
+    transport: http(config.rpc),
+    batch: {
+      multicall: true,
+    },
+  });
+};
 
 // --- Constants & ABIs ---
 const MORPHO_BLUE_ADDRESS = "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb";
@@ -55,12 +78,14 @@ export const isValidAddress = (addr: string): boolean => {
 };
 
 export const fetchVaultOnChain = async (
-  address: string
+  address: string,
+  chainId: ChainId
 ): Promise<VaultData> => {
   if (!isValidAddress(address)) {
     throw new Error("Invalid Ethereum Address");
   }
 
+  const client = getClient(chainId);
   const vaultAddress = address as Address;
   // Cast to any to avoid TS inference issues with 'read' property
   const vaultContract = getContract({

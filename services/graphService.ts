@@ -1,5 +1,5 @@
 
-import { MarketAllocation } from '../types';
+import { MarketAllocation, ChainId } from '../types';
 
 const MORPHO_GRAPH_URL = 'https://blue-api.morpho.org/graphql';
 
@@ -26,19 +26,19 @@ interface GraphResponse {
  * Enriches the on-chain allocation data with off-chain market metrics (LTV, Health Factor)
  * fetched from the Morpho Blue GraphQL API using USD values.
  */
-export const enrichVaultDataWithGraph = async (allocations: MarketAllocation[]): Promise<MarketAllocation[]> => {
+export const enrichVaultDataWithGraph = async (allocations: MarketAllocation[], chainId: ChainId): Promise<MarketAllocation[]> => {
   if (allocations.length === 0) return allocations;
 
   try {
     // 1. Prepare IDs: Force lowercase and wrap in quotes
     const ids = allocations.map(a => `"${a.id.toLowerCase()}"`).join(',');
     
-    // 2. Construct Query with Chain ID (1 = Mainnet)
+    // 2. Construct Query with Chain ID
     // Fetching USD values directly from the API to simplify calculation
     // WE MUST QUERY `uniqueKey` to match the on-chain ID, not `id`.
     const query = `
       query {
-        markets(where: { chainId_in: [1],  uniqueKey_in: [${ids}] }) {
+        markets(where: { chainId_in: [${chainId}],  uniqueKey_in: [${ids}] }) {
           items {
             uniqueKey
             state {
